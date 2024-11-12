@@ -18,7 +18,6 @@ use crate::utils::{
     solidity::isAuthorizedCall,
 };
 
-// Define events and errors in the contract
 sol! {
     event CcuPushed(address indexed user, bytes32 channelId, uint256 totalConsumption);
 }
@@ -38,7 +37,7 @@ pub struct ChannelConsumptionContract {
     // The user activity storage (user => UserConsumption)
     user_consumptions: StorageMap<Address, StorageU256>,
     // Some general configurations
-    frak_content_id: StorageU256,
+    nutty_content_id: StorageU256,
     content_registry: StorageAddress,
     // The total tracked consumption
     total_consumption: StorageU256,
@@ -58,7 +57,7 @@ impl ChannelConsumptionContract {
         let has_role = call_helper::<isAuthorizedCall>(
             self,
             content_registry,
-            (self.frak_content_id.get(), validator),
+            (self.nutty_content_id.get(), validator),
         )
         .map_err(|_| Errors::CallError(CallError {}))?;
 
@@ -88,7 +87,7 @@ impl ChannelConsumptionContract {
     pub fn initialize(
         &mut self,
         owner: Address,
-        frak_content_id: U256,
+        nutty_content_id: U256,
         content_registry: Address,
     ) -> Result<(), Errors> {
         // Ensure that the contract has not been initialized
@@ -100,7 +99,7 @@ impl ChannelConsumptionContract {
         self.ownable._transfer_ownership(owner);
 
         // Init our global config
-        self.frak_content_id.set(frak_content_id);
+        self.nutty_content_id.set(nutty_content_id);
         self.content_registry.set(content_registry);
 
         // Return the success
